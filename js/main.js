@@ -8,9 +8,26 @@ const stopButton = document.getElementById("stop");
 
 const reloadButton = document.getElementById("reload");
 
-// audios
-const runAudio = document.getElementById("runAudio");
-const countinAudio = document.getElementById("countinAudio");
+// audio
+const audio = new (function Audio() {
+	var playing;
+	this.work = document.getElementById("workAudio");
+	this.countin = document.getElementById("countinAudio");
+	this.rest = document.getElementById("restAudio");
+	this.pause = () => playing.pause();
+	this.resume = function() {
+		playing.play();
+	};
+	this.stop = function() {
+		playing.pause(); playing.currentTime = 0;
+	};
+	this.play = function(type) {
+		if (this[type]) {
+			playing = this[type];
+			playing.play();
+		};
+	}
+})();
 
 // sequence text
 const sequenceText = document.getElementById("sequenceText");
@@ -35,12 +52,13 @@ function startEventHandler(e) {
 function pauseEventHandler(e) {
 	console.log("pause");
 	timer.pause();
-	[runAudio, countinAudio].forEach(function(e) {e.pause()});
+	audio.pause();
 };
 
 function resumeEventHandler(e) {
 	console.log("resume");
 	timer.resume();
+	audio.resume();
 };
 
 function stopEventHandler(e) {
@@ -48,7 +66,7 @@ function stopEventHandler(e) {
 	if (timer) {
 		timer.clearAll();
 	};
-	[runAudio, countinAudio].forEach(function(e) {e.pause(); e.currentTime = 0});
+	audio.stop();
 };
 
 function reloadEventHandler(e) {
@@ -73,7 +91,7 @@ function startButtonEventHandler(e) {
 function stopButtonEventHandler(e) {
 	setIndicator("stopped");
 	startButton.innerText = "start";
-	timer.clearAll();
+	startButton.dispatchEvent(stop);	
 };
 
 
@@ -100,15 +118,6 @@ function setCountdownIndicator(text) {
 
 function setCountdownIndicatorColor(color) {
 	countdownIndicator.style.color = color;
-};
-
-
-function playAudio(el) {
-	el.play();
-};
-
-function pauseAudio(el) {
-	el.pause();
 };
 
 
@@ -153,7 +162,7 @@ function CountdownTimer(totalSeconds) {
         		setCountdownIndicator(remaining);  
         		if (remaining < 5) {
         			setCountdownIndicatorColor("red");
-        			playAudio(countinAudio);
+        			audio.play('countin');
         		} else {
         			setCountdownIndicatorColor("black");
         		}     		
@@ -182,7 +191,7 @@ function playStream(stream) {
 	var step = stream.next();
 	setIndicator(step.value ? step.value.type : "done");
 	setCountdownIndicator(step.value ? step.value.dur : 0);
-	playAudio(runAudio);
+	audio.play(step.value.type);
 	if (step.done == false) {
 		timer = new Timer(function() {
 			playStream(stream)	
