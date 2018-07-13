@@ -1,5 +1,5 @@
-[
-	{type: 'warmup', dur: 5},
+[/*preset 1*/
+	{type: 'warmup', dur: 10},
 	{type: 'work', dur: 5},
 	{type: 'rest', dur: 5},
 	{type: 'work', dur: 5},

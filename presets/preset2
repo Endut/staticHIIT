@@ -1,4 +1,4 @@
-[
+[/*preset 2*/
 	{type: 'warmup', dur: 5},
 	{type: 'work', dur: 5},
 	{type: 'rest', dur: 5},
