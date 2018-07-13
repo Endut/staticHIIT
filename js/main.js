@@ -83,7 +83,10 @@ function selectPresetEventHandler(e) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4) {
-			if (this.status == 200) {console.log(this.responseText)};
+			if (this.status == 200) {
+				// console.log(this.responseText);
+				sequenceText.value = this.responseText;
+			};
 			if (this.status == 404) {console.log("Page not found.")};
 			// includeHTML();
 		}
