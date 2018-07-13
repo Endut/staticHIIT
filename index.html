@@ -17,6 +17,15 @@
 	{type: 'warmdown', dur: 240}
 ]
 </textarea> -->
+<label>choose a preset:
+	<select id="presets">
+	  <option value="preset1">Preset 1</option>
+	  <option value="preset2">Preset 2</option>
+<!-- 	  <option value="preset3">Preset 3</option>
+	  <option value="preset4">Preset 4</option> -->
+	</select>
+</label>
+<br>
 <textarea rows="11" cols="30" id="sequenceText">
 [
 	{type: 'warmup', dur: 5},
@@ -31,6 +40,7 @@
 ]
 </textarea>
 <br>
+
 <button type="button" id="start">start</button>
 <button type="button" id="stop">stop</button>
 
@@ -41,7 +51,7 @@
 </div>
 
 <audio id="workAudio">
-  <source src="sounds/work.mp3" type="audio/mpeg">
+  <source src="sounds/noot_noot.mp3" type="audio/mpeg">
 </audio>
 <audio id="countinAudio">
   <source src="sounds/four_second_countin.mp3" type="audio/mpeg">
@@ -51,6 +61,8 @@
 </audio>
 </body>
 
+
+<script src="js/audio.js"></script>
 <script src="js/main.js"></script>
 </html>
 

@@ -1,5 +1,6 @@
 const indicator = document.getElementById("indicator");
 const countdownIndicator = document.getElementById("countdownIndicator");
+const presetSelector = document.getElementById("presets");
 
 // buttons
 // const pauseButton = document.getElementById("pause");
@@ -7,27 +8,6 @@ const startButton = document.getElementById("start");
 const stopButton = document.getElementById("stop");
 
 const reloadButton = document.getElementById("reload");
-
-// audio
-const audio = new (function Audio() {
-	var playing;
-	this.work = document.getElementById("workAudio");
-	this.countin = document.getElementById("countinAudio");
-	this.rest = document.getElementById("restAudio");
-	this.pause = () => playing.pause();
-	this.resume = function() {
-		playing.play();
-	};
-	this.stop = function() {
-		playing.pause(); playing.currentTime = 0;
-	};
-	this.play = function(type) {
-		if (this[type]) {
-			playing = this[type];
-			playing.play();
-		};
-	}
-})();
 
 // sequence text
 const sequenceText = document.getElementById("sequenceText");
@@ -42,6 +22,8 @@ var stop = new Event('stop');
 var reload = new Event('reload');
 
 
+
+// event handlers
 function startEventHandler(e) {
 	// console.log(eval(sequenceText.value));
 	var sequence = eval(sequenceText.value);
@@ -93,6 +75,25 @@ function stopButtonEventHandler(e) {
 	startButton.innerText = "start";
 	startButton.dispatchEvent(stop);	
 };
+
+
+function selectPresetEventHandler(e) {
+	console.log("preset event");
+	var file = 'presets/' + e.target.value;
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4) {
+			if (this.status == 200) {console.log(this.responseText)};
+			if (this.status == 404) {console.log("Page not found.")};
+			// includeHTML();
+		}
+	}
+	xhttp.open("GET", file, true);
+	xhttp.send();
+    /*exit the function:*/
+    return;
+};
+
 
 
 
@@ -210,3 +211,5 @@ startButton.addEventListener('pause', pauseEventHandler);
 startButton.addEventListener('resume', resumeEventHandler);
 startButton.addEventListener('stop', stopEventHandler);
 startButton.addEventListener('reload', reloadEventHandler);
+
+presetSelector.addEventListener('change', selectPresetEventHandler);
