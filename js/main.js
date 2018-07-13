@@ -2,41 +2,82 @@ const indicator = document.getElementById("indicator");
 const countdownIndicator = document.getElementById("countdownIndicator");
 
 // buttons
-const pauseButton = document.getElementById("pause");
+// const pauseButton = document.getElementById("pause");
 const startButton = document.getElementById("start");
 const stopButton = document.getElementById("stop");
+
+const reloadButton = document.getElementById("reload");
 
 // audios
 const runAudio = document.getElementById("runAudio");
 const countinAudio = document.getElementById("countinAudio");
 
+// sequence text
+const sequenceText = document.getElementById("sequenceText");
+
 var timer;
 
+// events
+var start = new Event('start');
+var pause = new Event('pause');
+var resume = new Event('resume');
+var stop = new Event('stop');
+var reload = new Event('reload');
 
-function pauseButtonEventHandler(e) {
-	if (e.target.innerText == "pause") {
-		e.target.innerText = "resume";
-		setIndicator("paused");
-		timer.pause();
-	} else {
-		e.target.innerText = "pause";
-		timer.resume();		
-	};
+
+function startEventHandler(e) {
+	console.log(eval(sequenceText.value));
+};
+
+function pauseEventHandler(e) {
+	console.log("pause");
+};
+
+function resumeEventHandler(e) {
+	console.log("resume");
+};
+
+function stopEventHandler(e) {
+	console.log("stop");
+};
+
+function reloadEventHandler(e) {
+	console.log("reload");
 };
 
 
+// function pauseButtonEventHandler(e) {
+// 	if (e.target.innerText == "pause") {
+// 		e.target.innerText = "resume";
+// 		setIndicator("paused");
+// 		timer.pause();
+// 	} else {
+// 		e.target.innerText = "pause";
+// 		timer.resume();		
+// 	};
+// };
+
+
 function startButtonEventHandler(e) {
-	playAudio(countinAudio);
-	setTimeout(function() {
-		playStream(generateStream(streamdef.sequence));
-	}, 4000);
+	if (e.target.innerText == "start") {
+		e.target.innerText = "pause";
+		e.target.dispatchEvent(start);
+	} else if (e.target.innerText == "pause") {
+		e.target.innerText = "resume";
+		e.target.dispatchEvent(pause);
+	} else if (e.target.innerText == "resume") {
+		e.target.innerText = "pause";
+		e.target.dispatchEvent(resume);
+	};
 };
 
 
 function stopButtonEventHandler(e) {
 	setIndicator("stopped");
-	timer.pause();
+	startButton.innerText = "start";
+	timer.clearAll();
 };
+
 
 
 function setIndicator(text) {
@@ -48,14 +89,14 @@ function setIndicator(text) {
 	};
 };
 
+
 function setIndicatorColor(color) {
 	indicator.style.color = color;
-	// return indicator;
 };
+
 
 function setCountdownIndicator(text) {
 	countdownIndicator.innerText = text;
-	// return indicator;
 };
 
 
@@ -86,6 +127,11 @@ function Timer(callback, delay) {
         countdownTimer = new CountdownTimer(Math.floor(remaining/1000));
     };
 
+    this.clearAll = function() {
+    	clearTimeout(timerId);
+    	countdownTimer.clearAll();
+    }
+
     this.resume();
 };
 
@@ -113,23 +159,11 @@ function CountdownTimer(totalSeconds) {
         }, 1000);
     };
 
+    this.clearAll = function() {
+    	clearInterval(timerId);
+    }
+
     this.resume();
-};
-
-
-const streamdef = {
-	repetitions: 4,
-	sequence: [
-		{type: 'warmup', dur: 10},
-		{type: 'work', dur: 10},
-		{type: 'rest', dur: 10},
-		{type: 'work', dur: 10},
-		{type: 'rest', dur: 10},
-		{type: 'work', dur: 10},
-		{type: 'rest', dur: 10},
-		{type: 'work', dur: 10},
-		{type: 'warmdown', dur: 10}
-	]
 };
 
 
@@ -156,6 +190,12 @@ function playStream(stream) {
 
 
 
-pauseButton.addEventListener("click", pauseButtonEventHandler);
+// pauseButton.addEventListener("click", pauseButtonEventHandler);
 startButton.addEventListener("click", startButtonEventHandler);
 stopButton.addEventListener("click", stopButtonEventHandler);
+
+startButton.addEventListener('start', startEventHandler);
+startButton.addEventListener('pause', pauseEventHandler);
+startButton.addEventListener('resume', resumeEventHandler);
+startButton.addEventListener('stop', stopEventHandler);
+startButton.addEventListener('reload', reloadEventHandler);

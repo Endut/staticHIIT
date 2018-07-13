@@ -4,9 +4,21 @@
 <title>Page Title</title>
 </head>
 <body>
-
+<textarea rows="11" cols="30" id="sequenceText">
+[
+	{type: 'warmup', dur: 240},
+	{type: 'work', dur: 30},
+	{type: 'rest', dur: 60},
+	{type: 'work', dur: 30},
+	{type: 'rest', dur: 60},
+	{type: 'work', dur: 30},
+	{type: 'rest', dur: 60},
+	{type: 'work', dur: 30},
+	{type: 'warmdown', dur: 240}
+]
+</textarea>
+<br>
 <button type="button" id="start">start</button>
-<button type="button" id="pause">pause</button>
 <button type="button" id="stop">stop</button>
 
 <div id="indicator">
@@ -16,7 +28,7 @@
 </div>
 
 <audio id="runAudio">
-  <source src="sounds/work.mp3" type="audio/mpeg">
+  <source src="sounds/noot_noot.mp3" type="audio/mpeg">
 </audio>
 
 <audio id="countinAudio">
