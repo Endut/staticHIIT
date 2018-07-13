@@ -16,7 +16,7 @@ var timer;
 function pauseButtonEventHandler(e) {
 	if (e.target.innerText == "pause") {
 		e.target.innerText = "resume";
-		setIndicator("paused!");
+		setIndicator("paused");
 		timer.pause();
 	} else {
 		e.target.innerText = "pause";
@@ -41,9 +41,17 @@ function stopButtonEventHandler(e) {
 
 function setIndicator(text) {
 	indicator.innerText = text;
-	// return indicator;
+	if (text == 'work') {
+		setIndicatorColor('red');
+	} else {
+		setIndicatorColor('black')
+	};
 };
 
+function setIndicatorColor(color) {
+	indicator.style.color = color;
+	// return indicator;
+};
 
 function setCountdownIndicator(text) {
 	countdownIndicator.innerText = text;
@@ -51,8 +59,8 @@ function setCountdownIndicator(text) {
 };
 
 
-function setCountdownIndicatorColour(colour) {
-	countdownIndicator.style.color = colour;
+function setCountdownIndicatorColor(color) {
+	countdownIndicator.style.color = color;
 };
 
 
@@ -96,10 +104,10 @@ function CountdownTimer(totalSeconds) {
         		remaining -= 1;
         		setCountdownIndicator(remaining);  
         		if (remaining < 5) {
-        			setCountdownIndicatorColour("red");
+        			setCountdownIndicatorColor("red");
         			playAudio(countinAudio);
         		} else {
-        			setCountdownIndicatorColour("black");
+        			setCountdownIndicatorColor("black");
         		}     		
         	}
         }, 1000);
@@ -113,13 +121,13 @@ const streamdef = {
 	repetitions: 4,
 	sequence: [
 		{type: 'warmup', dur: 10},
-		{type: 'run', dur: 10},
+		{type: 'work', dur: 10},
 		{type: 'rest', dur: 10},
-		{type: 'run', dur: 10},
+		{type: 'work', dur: 10},
 		{type: 'rest', dur: 10},
-		{type: 'run', dur: 10},
+		{type: 'work', dur: 10},
 		{type: 'rest', dur: 10},
-		{type: 'run', dur: 10},
+		{type: 'work', dur: 10},
 		{type: 'warmdown', dur: 10}
 	]
 };
