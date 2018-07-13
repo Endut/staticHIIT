@@ -26,36 +26,34 @@ var reload = new Event('reload');
 
 
 function startEventHandler(e) {
-	console.log(eval(sequenceText.value));
+	// console.log(eval(sequenceText.value));
+	var sequence = eval(sequenceText.value);
+	console.log(sequence);
+	playStream(generateStream(sequence));
 };
 
 function pauseEventHandler(e) {
 	console.log("pause");
+	timer.pause();
+	[runAudio, countinAudio].forEach(function(e) {e.pause()});
 };
 
 function resumeEventHandler(e) {
 	console.log("resume");
+	timer.resume();
 };
 
 function stopEventHandler(e) {
 	console.log("stop");
+	if (timer) {
+		timer.clearAll();
+	};
+	[runAudio, countinAudio].forEach(function(e) {e.pause(); e.currentTime = 0});
 };
 
 function reloadEventHandler(e) {
 	console.log("reload");
 };
-
-
-// function pauseButtonEventHandler(e) {
-// 	if (e.target.innerText == "pause") {
-// 		e.target.innerText = "resume";
-// 		setIndicator("paused");
-// 		timer.pause();
-// 	} else {
-// 		e.target.innerText = "pause";
-// 		timer.resume();		
-// 	};
-// };
 
 
 function startButtonEventHandler(e) {
@@ -107,6 +105,10 @@ function setCountdownIndicatorColor(color) {
 
 function playAudio(el) {
 	el.play();
+};
+
+function pauseAudio(el) {
+	el.pause();
 };
 
 
