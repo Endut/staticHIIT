@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style>
+textarea {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+	.string { color: green; }
+	.number { color: darkorange; }
+	.boolean { color: blue; }
+	.null { color: magenta; }
+	.key { color: red; }
+</style>
 <title>Static HIIT</title>
 </head>
 <body>
@@ -18,27 +26,11 @@
 ]
 </textarea> -->
 <label>choose a preset:
-	<select id="presets">
-	  <option value="preset1">Preset 1</option>
-	  <option value="preset2">Preset 2</option>
-<!-- 	  <option value="preset3">Preset 3</option>
-	  <option value="preset4">Preset 4</option> -->
+	<select id="presetSelector">
 	</select>
 </label>
 <br>
 <textarea rows="11" cols="30" id="sequenceText">
-[
-	//default workout for debugging
-	{type: 'warmup', dur: 5},
-	{type: 'work', dur: 5},
-	{type: 'rest', dur: 5},
-	{type: 'work', dur: 5},
-	{type: 'rest', dur: 5},
-	{type: 'work', dur: 5},
-	{type: 'rest', dur: 5},
-	{type: 'work', dur: 5},
-	{type: 'warmdown', dur: 5}
-]
 </textarea>
 <br>
 
@@ -62,8 +54,9 @@
 </audio>
 </body>
 
-
+<script src="js/stringify.js"></script>
 <script src="js/audio.js"></script>
+<script src="js/presets.js"></script>
 <script src="js/main.js"></script>
 </html>
 

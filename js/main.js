@@ -1,6 +1,8 @@
 const indicator = document.getElementById("indicator");
 const countdownIndicator = document.getElementById("countdownIndicator");
-const presetSelector = document.getElementById("presets");
+const presetSelector = document.getElementById("presetSelector");
+
+const presetDataURL = "https://api.myjson.com/bins/bbdra";
 
 // buttons
 // const pauseButton = document.getElementById("pause");
@@ -13,6 +15,7 @@ const reloadButton = document.getElementById("reload");
 const sequenceText = document.getElementById("sequenceText");
 
 var timer;
+var presets;
 
 // events
 var start = new Event('start');
@@ -21,54 +24,50 @@ var resume = new Event('resume');
 var stop = new Event('stop');
 var reload = new Event('reload');
 
+var getPresets = new Event('getPresets');
+var pushPreset = new Event('pushPreset');
 
 
 // event handlers
 function startEventHandler(e) {
-	// console.log(eval(sequenceText.value));
 	var sequence = eval(sequenceText.value);
-	console.log(sequence);
+	e.target.innerText = "pause";
 	playStream(generateStream(sequence));
 };
 
 function pauseEventHandler(e) {
-	console.log("pause");
+	e.target.innerText = "resume";
 	timer.pause();
 	audio.pause();
 };
 
 function resumeEventHandler(e) {
-	console.log("resume");
+	e.target.innerText = "pause";
 	timer.resume();
 	audio.resume();
 };
 
 function stopEventHandler(e) {
-	console.log("stop");
 	if (timer) {
 		timer.clearAll();
 	};
 	audio.stop();
 };
 
-function reloadEventHandler(e) {
-	console.log("reload");
-};
-
 
 function startButtonEventHandler(e) {
-	if (e.target.innerText == "start") {
-		e.target.innerText = "pause";
-		e.target.dispatchEvent(start);
-	} else if (e.target.innerText == "pause") {
-		e.target.innerText = "resume";
-		e.target.dispatchEvent(pause);
-	} else if (e.target.innerText == "resume") {
-		e.target.innerText = "pause";
-		e.target.dispatchEvent(resume);
-	};
-};
+	switch (e.target.innerText) {
+		case "start":
+			e.target.dispatchEvent(start);
+			break;
+		case "pause":
+			e.target.dispatchEvent(pause);
+			break;
+		case "resume":
+			e.target.dispatchEvent(resume);
 
+	}
+};
 
 function stopButtonEventHandler(e) {
 	setIndicator("stopped");
@@ -77,28 +76,27 @@ function stopButtonEventHandler(e) {
 };
 
 
-function selectPresetEventHandler(e) {
-	// console.log("preset event");
-	var file = 'presets/' + e.target.value;
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4) {
-			if (this.status == 200) {
-				// console.log(this.responseText);
-				sequenceText.value = this.responseText;
-			};
-			if (this.status == 404) {console.log("Page not found.")};
-			// includeHTML();
+function setPresetEventHandler(e) {
+	sequenceText.value = e.target.value + ": " + stringify(presets[e.target.value], undefined, 2);
+};
+
+function getPresetsEventHandler(e) {
+	// var presets = e.presets;
+	for (var key in presets) {
+		if (presets.hasOwnProperty(key)) {
+			var option = document.createElement("option");
+			option.value = key;
+			option.innerHTML = key;
+			e.target.appendChild(option);
 		}
-	}
-	xhttp.open("GET", file, true);
-	xhttp.send();
-    /*exit the function:*/
-    return;
+	};
+	setPresetEventHandler(e);
 };
 
 
-
+function reloadEventHandler(e) {
+	console.log("reload");
+};
 
 function getPresetList(e) {
 	// console.log("preset event");
@@ -108,7 +106,7 @@ function getPresetList(e) {
 		if (this.readyState == 4) {
 			if (this.status == 200) {
 				console.log(this.responseText);
-				// sequenceText.value = this.responseText;
+				// sequenceText.value = this.respo	nseText;
 			};
 			if (this.status == 404) {console.log("Page not found.")};
 			// includeHTML();
@@ -119,7 +117,6 @@ function getPresetList(e) {
     /*exit the function:*/
     return;
 };
-
 
 
 function setIndicator(text) {
@@ -237,4 +234,13 @@ startButton.addEventListener('resume', resumeEventHandler);
 startButton.addEventListener('stop', stopEventHandler);
 startButton.addEventListener('reload', reloadEventHandler);
 
-presetSelector.addEventListener('change', selectPresetEventHandler);
+presetSelector.addEventListener('change', setPresetEventHandler);
+presetSelector.addEventListener('getPresets', getPresetsEventHandler);
+
+window.addEventListener("load", function(e) {
+
+	loadXMLDoc(function(response) {
+		presets = JSON.parse(response);
+		presetSelector.dispatchEvent(getPresets);
+	}, "GET", presetDataURL)
+});
