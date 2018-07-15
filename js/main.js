@@ -78,7 +78,7 @@ function stopButtonEventHandler(e) {
 
 
 function selectPresetEventHandler(e) {
-	console.log("preset event");
+	// console.log("preset event");
 	var file = 'presets/' + e.target.value;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
@@ -97,6 +97,28 @@ function selectPresetEventHandler(e) {
     return;
 };
 
+
+
+
+function getPresetList(e) {
+	// console.log("preset event");
+	var file = 'presets/';
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4) {
+			if (this.status == 200) {
+				console.log(this.responseText);
+				// sequenceText.value = this.responseText;
+			};
+			if (this.status == 404) {console.log("Page not found.")};
+			// includeHTML();
+		}
+	}
+	xhttp.open("GET", file, true);
+	xhttp.send();
+    /*exit the function:*/
+    return;
+};
 
 
 
