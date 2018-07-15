@@ -30,7 +30,8 @@ var pushPreset = new Event('pushPreset');
 
 // event handlers
 function startEventHandler(e) {
-	var sequence = eval(sequenceText.value);
+	var sequence = presets[presetSelector.value].sequence;
+	// eval(sequenceText.value);
 	e.target.innerText = "pause";
 	playStream(generateStream(sequence));
 };
@@ -77,7 +78,7 @@ function stopButtonEventHandler(e) {
 
 
 function setPresetEventHandler(e) {
-	sequenceText.value = e.target.value + ": " + stringify(presets[e.target.value], undefined, 2);
+	sequenceText.value = '"' + e.target.value + '": ' + stringify(presets[e.target.value], undefined, 2);
 };
 
 function getPresetsEventHandler(e) {
