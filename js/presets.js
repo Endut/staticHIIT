@@ -1,5 +1,5 @@
 // presets
-function loadXMLDoc(onSuccess, requestType, url) {
+function sendXMLRequest(onSuccess, requestType, url, data) {
     var xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function() {
@@ -18,8 +18,10 @@ function loadXMLDoc(onSuccess, requestType, url) {
     };
 
     xhttp.open(requestType, url, true);
-    xhttp.send();
+    xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhttp.send(data);
 };
+
 
 // function syntaxHighlight(json) {
 //     json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

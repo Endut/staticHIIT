@@ -2,56 +2,56 @@
 <html>
 <head>
 <style>
-textarea {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+/*textarea {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
 	.string { color: green; }
 	.number { color: darkorange; }
 	.boolean { color: blue; }
 	.null { color: magenta; }
-	.key { color: red; }
+	.key { color: red; }*/
+.hideable-save {
+	visibility: hidden;
+}
 </style>
 <title>Static HIIT</title>
 </head>
 <body>
-<!-- <textarea rows="11" cols="30" id="sequenceText">
-[
-	{type: 'warmup', dur: 240},
-	{type: 'work', dur: 30},
-	{type: 'rest', dur: 60},
-	{type: 'work', dur: 30},
-	{type: 'rest', dur: 60},
-	{type: 'work', dur: 30},
-	{type: 'rest', dur: 60},
-	{type: 'work', dur: 30},
-	{type: 'warmdown', dur: 240}
-]
-</textarea> -->
-<label>choose a preset:
-	<select id="presetSelector">
-	</select>
-</label>
-<br>
-<textarea rows="11" cols="30" id="sequenceText">
-</textarea>
-<br>
+	<label>choose a preset:
+		<select id="presetSelector"></select>
+	</label>
 
-<button type="button" id="start">start</button>
-<button type="button" id="stop">stop</button>
+	<button class="hideable-save" type="button" id="save" disabled>save</button>
 
-<div id="indicator">
-</div>
+	<br>
 
-<div id="countdownIndicator">
-</div>
+	<textarea rows="11" cols="30" id="sequenceText">
+	</textarea>
 
-<audio id="workAudio">
-  <source src="sounds/noot_noot.mp3" type="audio/mpeg">
-</audio>
-<audio id="countinAudio">
-  <source src="sounds/four_second_countin.mp3" type="audio/mpeg">
-</audio>
-<audio id="restAudio">
-  <source src="sounds/rest.mp3" type="audio/mpeg">
-</audio>
+	<br>
+
+	<button type="button" id="start">start</button>
+	<button type="button" id="stop">stop</button>
+
+	<div id="indicator">
+	</div>
+
+	<div id="countdownIndicator">
+	</div>
+	
+	<br>
+	
+	<a href="https://github.com/Endut/staticHIIT">github</a>
+	
+	
+	<audio id="workAudio">
+	  <source src="sounds/noot_noot.mp3" type="audio/mpeg">
+	</audio>
+	<audio id="countinAudio">
+	  <source src="sounds/four_second_countin.mp3" type="audio/mpeg">
+	</audio>
+	<audio id="restAudio">
+	  <source src="sounds/rest.mp3" type="audio/mpeg">
+	</audio>
+
 </body>
 
 <script src="js/stringify.js"></script>

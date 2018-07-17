@@ -1,4 +1,4 @@
-function Timer(callback, delay) {
+function Timer(onNextStep, onSecond, delay) {
     var timerId, countdownTimer, start, remaining = delay;
 
 
@@ -11,8 +11,8 @@ function Timer(callback, delay) {
     this.resume = function() {
         start = new Date();
         clearTimeout(timerId);
-        timerId = setTimeout(callback, remaining);
-        countdownTimer = new CountdownTimer(Math.floor(remaining/1000));
+        timerId = setTimeout(onNextStep, remaining);
+        countdownTimer = new CountdownTimer(onSecond, Math.floor(remaining/1000));
     };
 
     this.clearAll = function() {
@@ -24,7 +24,7 @@ function Timer(callback, delay) {
 };
 
 
-function CountdownTimer(totalSeconds) {
+function CountdownTimer(onSecond, totalSeconds) {
     var timerId, remaining = totalSeconds;
 
     this.pause = function() {
@@ -36,15 +36,10 @@ function CountdownTimer(totalSeconds) {
         timerId = setInterval(function() {
         	if (remaining > 0) {
         		remaining -= 1;
-        		setCountdownIndicator(remaining);  
-        		if (remaining < 5) {
-        			setCountdownIndicatorColor("red");
-        			audio.play('countin');
-        		} else {
-        			setCountdownIndicatorColor("black");
-        		}     		
+                onSecond(remaining);        		     		
         	}
         }, 1000);
+
     };
 
     this.clearAll = function() {

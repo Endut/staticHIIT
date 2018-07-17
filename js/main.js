@@ -8,8 +8,7 @@ const presetDataURL = "https://api.myjson.com/bins/jevl2";
 // const pauseButton = document.getElementById("pause");
 const startButton = document.getElementById("start");
 const stopButton = document.getElementById("stop");
-
-const reloadButton = document.getElementById("reload");
+const saveButton = document.getElementById("save");
 
 // sequence text
 const sequenceText = document.getElementById("sequenceText");
@@ -22,7 +21,6 @@ var start = new Event('start');
 var pause = new Event('pause');
 var resume = new Event('resume');
 var stop = new Event('stop');
-var reload = new Event('reload');
 
 var getPresets = new Event('getPresets');
 var pushPreset = new Event('pushPreset');
@@ -53,6 +51,7 @@ function stopEventHandler(e) {
 		timer.clearAll();
 	};
 	audio.stop();
+	setCountdownIndicator('');
 };
 
 
@@ -81,8 +80,33 @@ function setPresetEventHandler(e) {
 	sequenceText.value = '"' + e.target.value + '": ' + stringify(presets[e.target.value], undefined, 2);
 };
 
+
+
+function savePresetEventHandler(e) {
+	var newPreset = JSON.parse("{" + sequenceText.value + "}");
+	for (var key in newPreset) {
+		if (presets.hasOwnProperty(key)) {
+			// updating old preset 'PUT'
+			presets[key] = newPreset[key];
+		} else {
+			// saving new preset
+			presets[key] = newPreset[key];
+		};
+		sendXMLRequest(function(response) {
+			presets = JSON.parse(response);
+			presetSelector.dispatchEvent(getPresets);
+		}, "PUT", presetDataURL, JSON.stringify(presets));
+	}
+	// return newPreset;
+};
+
+function changeTextEventHandler(e) {
+	saveButton.style.visibility = 'visible';
+	saveButton.disabled = false;
+};
+
 function getPresetsEventHandler(e) {
-	// var presets = e.presets;
+	e.target.innerHTML = "";
 	for (var key in presets) {
 		if (presets.hasOwnProperty(key)) {
 			var option = document.createElement("option");
@@ -92,31 +116,6 @@ function getPresetsEventHandler(e) {
 		}
 	};
 	setPresetEventHandler(e);
-};
-
-
-function reloadEventHandler(e) {
-	console.log("reload");
-};
-
-function getPresetList(e) {
-	// console.log("preset event");
-	var file = 'presets/';
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4) {
-			if (this.status == 200) {
-				console.log(this.responseText);
-				// sequenceText.value = this.respo	nseText;
-			};
-			if (this.status == 404) {console.log("Page not found.")};
-			// includeHTML();
-		}
-	}
-	xhttp.open("GET", file, true);
-	xhttp.send();
-    /*exit the function:*/
-    return;
 };
 
 
@@ -160,10 +159,19 @@ function playStream(stream) {
 	setCountdownIndicator(step.value ? step.value.dur : 0);
 	audio.play(step.value.type);
 	if (step.done == false) {
-		timer = new Timer(function() {
-			playStream(stream)	
-		}, step.value.dur * 1000)	
-	}		
+		timer = new Timer(
+			function() {playStream(stream)},
+			function(remainingSeconds) {
+				setCountdownIndicator(remainingSeconds);
+				if (remainingSeconds < 5) {
+					setCountdownIndicatorColor("red");
+        			audio.play('countin');
+        		} else {
+        			setCountdownIndicatorColor("black");
+        		}
+        	},
+        	step.value.dur * 1000)
+	}
 };
 
 
@@ -176,14 +184,18 @@ startButton.addEventListener('start', startEventHandler);
 startButton.addEventListener('pause', pauseEventHandler);
 startButton.addEventListener('resume', resumeEventHandler);
 startButton.addEventListener('stop', stopEventHandler);
-startButton.addEventListener('reload', reloadEventHandler);
 
 presetSelector.addEventListener('change', setPresetEventHandler);
 presetSelector.addEventListener('getPresets', getPresetsEventHandler);
 
+sequenceText.addEventListener('change', changeTextEventHandler);
+
+saveButton.addEventListener('click', savePresetEventHandler);
+
+
 window.addEventListener("load", function(e) {
 
-	loadXMLDoc(function(response) {
+	sendXMLRequest(function(response) {
 		presets = JSON.parse(response);
 		presetSelector.dispatchEvent(getPresets);
 	}, "GET", presetDataURL)
