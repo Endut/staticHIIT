@@ -106,6 +106,7 @@ function changeTextEventHandler(e) {
 };
 
 function getPresetsEventHandler(e) {
+	var prevChoice = e.target.value;
 	e.target.innerHTML = "";
 	for (var key in presets) {
 		if (presets.hasOwnProperty(key)) {
@@ -115,6 +116,7 @@ function getPresetsEventHandler(e) {
 			e.target.appendChild(option);
 		}
 	};
+	e.target.value = prevChoice;
 	setPresetEventHandler(e);
 };
 
