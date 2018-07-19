@@ -196,6 +196,7 @@ saveButton.addEventListener('click', savePresetEventHandler);
 
 
 window.addEventListener("load", function(e) {
+	audio.work.play();
 
 	sendXMLRequest(function(response) {
 		presets = JSON.parse(response);
