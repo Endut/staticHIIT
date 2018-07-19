@@ -200,5 +200,10 @@ window.addEventListener("load", function(e) {
 	sendXMLRequest(function(response) {
 		presets = JSON.parse(response);
 		presetSelector.dispatchEvent(getPresets);
+		for (key in presets) {
+			presetSelector.value = key;
+			presetSelector.dispatchEvent(new Event('change'));
+			break;
+		}
 	}, "GET", presetDataURL)
 });
